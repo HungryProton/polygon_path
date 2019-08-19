@@ -11,10 +11,20 @@ func show_polygon(value):
 func set_handle(index, camera, point):
 	var gm_path = get_spatial_node()
 	var ray_hit_pos = common.intersect_with(gm_path, camera, point)
-	
-	if(ray_hit_pos):
+	if not ray_hit_pos:
+		return
+	var count = gm_path.curve.get_point_count()
+	if index < count:
 		gm_path.set_point_position(index, ray_hit_pos)
-		redraw()
+	else:
+		var i = (index - count)
+		var p_index = int(i / 2)
+		var base = gm_path.curve.get_point_position(p_index)
+		if i % 2 == 0:
+			gm_path.set_point_in(p_index, ray_hit_pos - base)
+		else:
+			gm_path.set_point_out(p_index, ray_hit_pos - base)
+	redraw()
 
 func redraw():
 	clear()
@@ -55,12 +65,29 @@ func _draw_path(curve):
 
 func _draw_handles(curve):
 	var handles = PoolVector3Array()
+	var square_handles = PoolVector3Array()
+	var lines = PoolVector3Array()
+	var count = curve.get_point_count()
+	if count == 0:
+		return
+	for i in range(count):
+		var point_pos = curve.get_point_position(i)
+		var point_in = curve.get_point_in(i) + point_pos
+		var point_out = curve.get_point_out(i) + point_pos
 
-	for i in range(curve.get_point_count()):
-		handles.push_back(curve.get_point_position(i))
-	
-	if len(handles) > 0:
-		add_handles(handles, get_plugin().get_material("handles", self))
+		
+		lines.push_back(point_pos)
+		lines.push_back(point_in)
+		lines.push_back(point_pos)
+		lines.push_back(point_out)
+		
+		square_handles.push_back(point_in)
+		square_handles.push_back(point_out)
+		handles.push_back(point_pos)
+		
+	add_handles(handles, get_plugin().get_material("handles", self))
+	add_handles(square_handles, get_plugin().get_material("square", self))
+	add_lines(lines, get_plugin().get_material("handle_lines", self))
 
 func _draw_polygon(gm_path):
 	if not show_polygon:

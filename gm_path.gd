@@ -50,6 +50,15 @@ func add_point(position):
 	if not curve:
 		curve = Curve3D.new()
 	curve.add_point(position)
+	var index = curve.get_point_count() - 1
+	var angle = curve.get_point_tilt(index)
+	var dir = Vector2(cos(angle), sin(angle))
+	var dir_in = dir
+	var dir_out = dir.rotated(PI)
+	
+	curve.set_point_in(index, Vector3(dir_in.x, 0.0, dir_in.y))
+	curve.set_point_out(index, Vector3(dir_out.x, 0.0, dir_out.y))
+	
 	_update_from_curve()
 
 func set_closed_curve(value):
@@ -63,6 +72,17 @@ func set_point_position(index, pos):
 	curve.set_point_position(index, pos)
 	_update_from_curve()
 
+func set_point_in(index, pos):
+	curve.set_point_in(index, pos)
+	_update_from_curve()
+
+func set_point_out(index, pos):
+	curve.set_point_out(index, pos)
+	_update_from_curve()
+
+func remove_closest_to(pos):
+	pass
+
 ## --
 ## Internal methods
 ## --
@@ -75,7 +95,6 @@ func _get_projected_coords(coords : Vector3):
 
 # Travel the whole path to update the polygon and bounds
 func _update_from_curve():
-	print("Update from curve called")
 	var _min = null
 	var _max = null
 	var connections = PoolIntArray()
@@ -85,11 +104,11 @@ func _update_from_curve():
 		curve = Curve3D.new()
 	
 	var length = curve.get_baked_length()
-	var steps = round(length / polygon_resolution) + 1
+	var steps = round(length / polygon_resolution)
 
 	for i in range(steps):
 		# Get a point on the curve
-		var coords_3d = curve.interpolate_baked((i/steps) * length)
+		var coords_3d = curve.interpolate_baked((i/(steps-2)) * length)
 		var coords = _get_projected_coords(coords_3d)
 		
 		# Store polygon data

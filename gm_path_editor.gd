@@ -23,9 +23,9 @@ func get_name():
 func _enter_tree():
 	add_custom_type(
 		"GM_Path", 
-		"Node",
+		"Spatial",
 		load("res://addons/gm_path/gm_path.gd"),
-		load("res://addons/gm_path/icon.svg")
+		load("res://addons/gm_path/icons/path.svg")
 	)
 	_register_gizmos()
 	_register_signals()
@@ -100,10 +100,12 @@ func forward_spatial_gui_input(camera, event):
 				if _mode == "add" and not event.pressed:
 					_edited_node.add_point(ray_hit_pos)
 					_path_gizmo.force_redraw()
+				if _mode == "remove" and not event.pressed:
+					_edited_node.remove_closest_to(ray_hit_pos)
+					_path_gizmo.force_redraw()
 				#if _mode == "select" and not event.pressed:
 				#	_path_gizmo.force_redraw()
 	return captured_event
-
 
 func _show_control_panel():
 	if not _path_controls.get_parent():
