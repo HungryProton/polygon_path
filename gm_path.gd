@@ -57,6 +57,11 @@ func set_closed_curve(value):
 	if closed_curve:
 		# Create a new point, duplicate the first point data
 		pass
+	_update_from_curve()
+
+func set_point_position(index, pos):
+	curve.set_point_position(index, pos)
+	_update_from_curve()
 
 ## --
 ## Internal methods
@@ -65,17 +70,16 @@ func set_closed_curve(value):
 func _ready():
 	_update_from_curve()
 
-func _on_curve_changed():
-	pass
-
 func _get_projected_coords(coords : Vector3):
 	return Vector2(coords.x, coords.z)
 
 # Travel the whole path to update the polygon and bounds
 func _update_from_curve():
+	print("Update from curve called")
 	var _min = null
 	var _max = null
 	var connections = PoolIntArray()
+	polygon_points = PoolVector2Array()
 	
 	if not curve:
 		curve = Curve3D.new()

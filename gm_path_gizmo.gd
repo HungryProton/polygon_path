@@ -1,10 +1,20 @@
 extends EditorSpatialGizmo
 
+var common = load("res://addons/gm_path/common.gd")
+
 var show_polygon : bool = false
 
 func show_polygon(value):
 	show_polygon = value
 	redraw()
+
+func set_handle(index, camera, point):
+	var gm_path = get_spatial_node()
+	var ray_hit_pos = common.intersect_with(gm_path, camera, point)
+	
+	if(ray_hit_pos):
+		gm_path.set_point_position(index, ray_hit_pos)
+		redraw()
 
 func redraw():
 	clear()

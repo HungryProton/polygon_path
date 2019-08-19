@@ -11,6 +11,8 @@ var _edited_node = null
 var _editor_selection : EditorSelection = null
 var _mode = "select"
 
+var common = load("res://addons/gm_path/common.gd")
+
 # --
 # EditorPlugin overrides
 # --
@@ -91,26 +93,17 @@ func forward_spatial_gui_input(camera, event):
 
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT:
-			var from = camera.project_ray_origin(event.position)
-			var to = camera.project_ray_normal(event.position) * 50
-			
-			var plane = _get_path_plane()
-			var ray_hit_pos = plane.intersects_ray(from, to)
-			
+			var ray_hit_pos = common.intersect_with(_edited_node, camera, event.position)
 			if ray_hit_pos:
 				captured_event = true
 				
 				if _mode == "add" and not event.pressed:
 					_edited_node.add_point(ray_hit_pos)
 					_path_gizmo.force_redraw()
+				#if _mode == "select" and not event.pressed:
+				#	_path_gizmo.force_redraw()
 	return captured_event
 
-func _get_path_plane():
-	var t = _edited_node.get_global_transform()
-	var a = t.basis.x
-	var b = t.basis.z
-	var c = a + b
-	return Plane(a, b, c)
 
 func _show_control_panel():
 	if not _path_controls.get_parent():
