@@ -40,7 +40,7 @@ func handles(node):
 
 func edit(node):
 	_show_control_panel()
-	_edited_node = node
+	_edited_node = node as GM_Path
 
 # --
 # Internal methods
@@ -73,6 +73,7 @@ func _on_selection_change():
 			_hide_control_panel()
 
 func _on_mode_change(mode):
+	print("Selected mode : ", mode)
 	_mode = mode
 
 func _on_option_change(option, value):
@@ -84,7 +85,7 @@ func _on_option_change(option, value):
 
 func forward_spatial_gui_input(camera, event):
 	var captured_event = false
-	
+
 	if not _edited_node:
 		return false
 

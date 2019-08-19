@@ -2,10 +2,10 @@ extends EditorSpatialGizmo
 
 var common = load("res://addons/gm_path/common.gd")
 
-var show_polygon : bool = false
+var _show_polygon : bool = false
 
 func show_polygon(value):
-	show_polygon = value
+	_show_polygon = value
 	redraw()
 
 func set_handle(index, camera, point):
@@ -90,7 +90,7 @@ func _draw_handles(curve):
 	add_lines(lines, get_plugin().get_material("handle_lines", self))
 
 func _draw_polygon(gm_path):
-	if not show_polygon:
+	if not _show_polygon:
 		return
 	var polygon = PoolVector3Array()
 	var polygon_points = gm_path.polygon_points

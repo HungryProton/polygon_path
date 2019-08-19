@@ -17,6 +17,8 @@ extends Spatial
 
 class_name GM_Path
 
+signal curve_updated
+
 ## -- 
 ## Exported variables
 ## --
@@ -105,6 +107,9 @@ func _update_from_curve():
 	
 	var length = curve.get_baked_length()
 	var steps = round(length / polygon_resolution)
+	
+	if steps == 0:
+		return
 
 	for i in range(steps):
 		# Get a point on the curve
@@ -138,4 +143,10 @@ func _update_from_curve():
 	polygon.setup(polygon_points, connections)
 	size = Vector3(_max.x - _min.x, 0.0, _max.y - _min.y)
 	center = Vector3((_min.x + _max.x) / 2, 0.0, (_min.y + _max.y) / 2)
+	
+	_on_curve_update()
+	emit_signal("curve_updated")
+
+func _on_curve_update():
+	pass
 

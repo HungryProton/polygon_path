@@ -1,6 +1,7 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://addons/gm_level_editor/gui/panels/gm_path_controls.gd" type="Script" id=1]
+[ext_resource path="res://addons/gm_path/gui/gm_path_controls.gd" type="Script" id=1]
+
 
 [node name="HBoxContainer" type="HBoxContainer"]
 margin_right = 320.0
