@@ -13,17 +13,18 @@ func set_handle(index, camera, point):
 	var ray_hit_pos = common.intersect_with(gm_path, camera, point)
 	if not ray_hit_pos:
 		return
+	var local_pos = gm_path.to_local(ray_hit_pos)
 	var count = gm_path.curve.get_point_count()
 	if index < count:
-		gm_path.set_point_position(index, ray_hit_pos)
+		gm_path.set_point_position(index, local_pos)
 	else:
 		var i = (index - count)
 		var p_index = int(i / 2)
 		var base = gm_path.curve.get_point_position(p_index)
 		if i % 2 == 0:
-			gm_path.set_point_in(p_index, ray_hit_pos - base)
+			gm_path.set_point_in(p_index, local_pos - base)
 		else:
-			gm_path.set_point_out(p_index, ray_hit_pos - base)
+			gm_path.set_point_out(p_index, local_pos - base)
 	redraw()
 
 func redraw():

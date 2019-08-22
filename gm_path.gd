@@ -85,6 +85,11 @@ func set_point_out(index, pos):
 func remove_closest_to(pos):
 	pass
 
+func to_path():
+	var path = Path.new()
+	path.curve = curve
+	return path
+
 ## --
 ## Internal methods
 ## --

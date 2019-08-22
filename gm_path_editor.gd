@@ -97,12 +97,13 @@ func forward_spatial_gui_input(camera, event):
 			var ray_hit_pos = common.intersect_with(_edited_node, camera, event.position)
 			if ray_hit_pos:
 				captured_event = true
+				var pos = _edited_node.to_local(ray_hit_pos)
 				
 				if _mode == "add" and not event.pressed:
-					_edited_node.add_point(ray_hit_pos)
+					_edited_node.add_point(pos)
 					_path_gizmo.force_redraw()
 				if _mode == "remove" and not event.pressed:
-					_edited_node.remove_closest_to(ray_hit_pos)
+					_edited_node.remove_closest_to(pos)
 					_path_gizmo.force_redraw()
 				#if _mode == "select" and not event.pressed:
 				#	_path_gizmo.force_redraw()
