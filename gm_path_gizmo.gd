@@ -3,9 +3,14 @@ extends EditorSpatialGizmo
 var common = load("res://addons/gm_path/common.gd")
 
 var _show_polygon : bool = false
+var _show_grid : bool = false
 
 func show_polygon(value):
 	_show_polygon = value
+	redraw()
+
+func show_grid(value):
+	_show_grid = value
 	redraw()
 
 func set_handle(index, camera, point):
@@ -36,6 +41,8 @@ func redraw():
 	_draw_polygon(gm_path)
 
 func _draw_grid(gm_path):
+	if not _show_grid:
+		return
 	var grid = PoolVector3Array()
 	var size = gm_path.size
 	var center = gm_path.center
@@ -76,7 +83,6 @@ func _draw_handles(curve):
 		var point_in = curve.get_point_in(i) + point_pos
 		var point_out = curve.get_point_out(i) + point_pos
 
-		
 		lines.push_back(point_pos)
 		lines.push_back(point_in)
 		lines.push_back(point_pos)

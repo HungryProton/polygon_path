@@ -10,4 +10,5 @@ static func _get_path_plane(gm_path):
 	var a = t.basis.x
 	var b = t.basis.z
 	var c = a + b
-	return Plane(a, b, c)
+	var o = t.origin
+	return Plane(a + o, b + o, c + o)

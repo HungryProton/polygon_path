@@ -2,7 +2,6 @@
 
 [ext_resource path="res://addons/gm_path/gui/gm_path_controls.gd" type="Script" id=1]
 
-
 [node name="HBoxContainer" type="HBoxContainer"]
 margin_right = 320.0
 margin_bottom = 26.0
@@ -46,8 +45,17 @@ margin_bottom = 26.0
 rect_min_size = Vector2( 30, 0 )
 text = "Show polygon"
 flat = true
+
+[node name="ShowGrid" type="CheckBox" parent="."]
+margin_left = 331.0
+margin_right = 420.0
+margin_bottom = 26.0
+rect_min_size = Vector2( 30, 0 )
+text = "Show grid"
+flat = true
 [connection signal="pressed" from="Select" to="." method="_on_select"]
 [connection signal="pressed" from="Add" to="." method="_on_add"]
 [connection signal="pressed" from="Remove" to="." method="_on_remove"]
 [connection signal="toggled" from="ClosedCurve" to="." method="_on_close_curve"]
 [connection signal="toggled" from="ShowPolygon" to="." method="_on_show_polygon"]
+[connection signal="toggled" from="ShowGrid" to="." method="_on_show_grid"]

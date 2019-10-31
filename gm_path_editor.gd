@@ -82,6 +82,8 @@ func _on_option_change(option, value):
 			_path_gizmo.show_polygon(value)
 		"close_curve":
 			_edited_node.set_closed_curve(value)
+		"show_grid":
+			_path_gizmo.show_grid(value)
 
 func forward_spatial_gui_input(camera, event):
 	var captured_event = false

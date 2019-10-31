@@ -19,3 +19,5 @@ func _on_close_curve(value):
 func _on_show_polygon(value):
 	emit_signal("options", "show_polygon", value)
 
+func _on_show_grid(value):
+	emit_signal("options", "show_grid", value)

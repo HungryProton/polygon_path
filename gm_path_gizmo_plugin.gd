@@ -4,11 +4,11 @@ var GM_Path = preload("res://addons/gm_path/gm_path.gd")
 var gizmo = preload("res://addons/gm_path/gm_path_gizmo.gd")
 var current_gizmo
 
-var _mode = "select"
-var _show_polygon = false
-
 func show_polygon(value):
 	current_gizmo.show_polygon(value)
+
+func show_grid(value):
+	current_gizmo.show_grid(value)
 
 func force_redraw():
 	current_gizmo.redraw()
