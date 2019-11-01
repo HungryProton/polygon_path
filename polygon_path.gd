@@ -68,6 +68,11 @@ func add_point(position):
 	
 	_update_from_curve()
 
+func remove_point(index):
+	if index > curve.get_point_count() - 1:
+		return
+	curve.remove_point(index)
+ 
 func set_closed_curve(value):
 	closed_curve = value
 	if closed_curve:
@@ -88,7 +93,26 @@ func set_point_out(index, pos):
 	_update_from_curve()
 
 func remove_closest_to(pos):
-	pass
+	# Ignore if there's no point in the curve
+	var count = curve.get_point_count()
+	if count == 0:
+		return
+	
+	var closest = -1
+	var dist_squared = -1
+	
+	for i in range(0, count - 1):
+		var point_pos = curve.get_point_position(i)
+		var point_dist = point_pos.distance_squared_to(pos)
+		
+		if (closest == -1) or (dist_squared > point_dist):
+			closest = i
+			dist_squared = point_dist
+	
+	var threshold = 16 # Ignore if the closest point is farther than this
+	if dist_squared >= threshold:
+		return
+	remove_point(closest)
 
 func to_path():
 	var path = Path.new()
