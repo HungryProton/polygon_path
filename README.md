@@ -1,6 +1,6 @@
-# GM Path
+# Polygon Path
 
-![gm_path](https://user-images.githubusercontent.com/52043844/63334538-ec82e980-c33b-11e9-9fcb-2b465641fb5b.png)
+![polygon_path](https://user-images.githubusercontent.com/52043844/63334538-ec82e980-c33b-11e9-9fcb-2b465641fb5b.png)
 
 A curve node constrained on a 3D plane with the following features :
 - Better visualization compared to the built in Path node
@@ -20,8 +20,8 @@ This addon is still a **work in progress** and is **not** considered production 
 
 ## How to use
 
-- Add a GM Path node to your scene
-- When a GM Path is selected, new controls will appear on top of the viewport
+- Add a PolygonPath node to your scene
+- When a PolygonPath is selected, new controls will appear on top of the viewport
 - 3 modes are available
   + First button is the Select mode, allows you to move the handles
   + Second button is the Add mode, clicking on the plane will add a new point at the end of the path
