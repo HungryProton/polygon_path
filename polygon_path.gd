@@ -52,14 +52,19 @@ func add_point(position):
 	if not curve:
 		curve = Curve3D.new()
 	curve.add_point(position)
-	var index = curve.get_point_count() - 1
-	var angle = curve.get_point_tilt(index)
-	var dir = Vector2(cos(angle), sin(angle))
-	var dir_in = dir
-	var dir_out = dir.rotated(PI)
+	var current_index = curve.get_point_count() - 1
+	var previous_index = current_index - 1
+	if previous_index < 0:
+		curve.set_point_in(current_index, Vector3(-1.0, 0.0, 0.0))
+		curve.set_point_out(current_index, Vector3(1.0, 0.0, 0.0))
+		return
 	
-	curve.set_point_in(index, Vector3(dir_in.x, 0.0, dir_in.y))
-	curve.set_point_out(index, Vector3(dir_out.x, 0.0, dir_out.y))
+	var dir = position - curve.get_point_position(previous_index)
+	var dir_out = dir.normalized()
+	var dir_in = -dir.normalized()
+	
+	curve.set_point_in(current_index, dir_in)
+	curve.set_point_out(current_index, dir_out)
 	
 	_update_from_curve()
 

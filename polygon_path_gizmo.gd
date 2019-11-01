@@ -23,13 +23,18 @@ func set_handle(index, camera, point):
 	if index < count:
 		polygon_path.set_point_position(index, local_pos)
 	else:
+		var align_handles = Input.is_key_pressed(KEY_SHIFT)
 		var i = (index - count)
 		var p_index = int(i / 2)
 		var base = polygon_path.curve.get_point_position(p_index)
 		if i % 2 == 0:
 			polygon_path.set_point_in(p_index, local_pos - base)
+			if align_handles:
+				polygon_path.set_point_out(p_index, -(local_pos - base))
 		else:
 			polygon_path.set_point_out(p_index, local_pos - base)
+			if align_handles:
+				polygon_path.set_point_in(p_index, -(local_pos - base))
 	redraw()
 
 func redraw():
@@ -46,7 +51,7 @@ func _draw_grid(polygon_path):
 	var grid = PoolVector3Array()
 	var size = polygon_path.size
 	var center = polygon_path.center
-	var resolution = 0.5
+	var resolution = 0.8 # Define how large each square is
 	var steps_x = int(size.x / resolution) + 1
 	var steps_y = int(size.z / resolution) + 1
 	var half_size = size/2
