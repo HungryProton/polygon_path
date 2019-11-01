@@ -4,13 +4,16 @@ var gizmo = preload("res://addons/polygon_path/polygon_path_gizmo.gd")
 var current_gizmo
 
 func show_polygon(value):
-	current_gizmo.show_polygon(value)
+	if current_gizmo:
+		current_gizmo.show_polygon(value)
 
 func show_grid(value):
-	current_gizmo.show_grid(value)
+	if current_gizmo:
+		current_gizmo.show_grid(value)
 
 func force_redraw():
-	current_gizmo.redraw()
+	if current_gizmo:
+		current_gizmo.redraw()
 
 func _init():
 	create_material("polygon", Color(1, 0, 0), false, true)

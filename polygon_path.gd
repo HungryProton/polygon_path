@@ -22,7 +22,7 @@ signal curve_updated
 ## -- 
 ## Exported variables
 ## --
-export(float) var polygon_resolution : float = 1
+export(float) var polygon_resolution : float = 1 setget _polygon_resolution_set
 
 ## -- 
 ## Public variables
@@ -92,16 +92,11 @@ func set_point_out(index, pos):
 	curve.set_point_out(index, pos)
 	_update_from_curve()
 
-func remove_closest_to(pos):
-	# Ignore if there's no point in the curve
-	var count = curve.get_point_count()
-	if count == 0:
-		return
-	
+func get_closest_to(pos):
 	var closest = -1
 	var dist_squared = -1
 	
-	for i in range(0, count - 1):
+	for i in range(0, curve.get_point_count()):
 		var point_pos = curve.get_point_position(i)
 		var point_dist = point_pos.distance_squared_to(pos)
 		
@@ -111,7 +106,15 @@ func remove_closest_to(pos):
 	
 	var threshold = 16 # Ignore if the closest point is farther than this
 	if dist_squared >= threshold:
+		return -1
+	
+	return closest
+
+func remove_closest_to(pos):
+	# Ignore if there's no point in the curve 
+	if curve.get_point_count() == 0:
 		return
+	var closest = get_closest_to(pos)
 	remove_point(closest)
 
 func to_path():
@@ -128,6 +131,15 @@ func _ready():
 
 func _get_projected_coords(coords : Vector3):
 	return Vector2(coords.x, coords.z)
+
+func _polygon_resolution_set(value):
+	if (value <= 0.1):
+		# Ignore values too small or it will generate too much geometry
+		# and freeze the editor for several seconds at least
+		return
+	polygon_resolution = value
+	print('calling update')
+	_update_from_curve()
 
 # Travel the whole path to update the polygon and bounds
 func _update_from_curve():

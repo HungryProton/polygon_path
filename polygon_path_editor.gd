@@ -99,16 +99,43 @@ func forward_spatial_gui_input(camera, event):
 			if ray_hit_pos:
 				captured_event = true
 				var pos = _edited_node.to_local(ray_hit_pos)
-				
+				var undo = get_undo_redo()
 				if _mode == "add" and not event.pressed:
-					_edited_node.add_point(pos)
-					_path_gizmo.force_redraw()
+					var next_index = _edited_node.curve.get_point_count()
+					undo.create_action("Add point to PolygonPath")
+					undo.add_undo_method(self, "_remove_closest_to", _edited_node, pos)
+					undo.add_do_method(self, "_add_point", _edited_node, pos)
+					undo.commit_action()
 				if _mode == "remove" and not event.pressed:
-					_edited_node.remove_closest_to(pos)
-					_path_gizmo.force_redraw()
+					var index = _edited_node.get_closest_to(pos)
+					if index == -1: # No point will be removed
+						return
+					var previous_pos = _edited_node.curve.get_point_position(index)
+					var vec_in = _edited_node.curve.get_point_in(index)
+					var vec_out = _edited_node.curve.get_point_out(index)
+					undo.create_action("Remove point from PolygonPath")
+					undo.add_undo_method(self, "_add_point_at", _edited_node, index, previous_pos, vec_in, vec_out)
+					undo.add_do_method(self, "_remove_closest_to", _edited_node, pos)
+					undo.commit_action()
 				#if _mode == "select" and not event.pressed:
 				#	_path_gizmo.force_redraw()
 	return captured_event
+
+func _add_point(node, pos):
+	node.add_point(pos)
+	_path_gizmo.force_redraw()
+
+func _add_point_at(node, index, pos, vec_in, vec_out):
+	node.curve.add_point(pos, vec_in, vec_out, index)
+	_path_gizmo.force_redraw()
+
+func _remove_point(node, index):
+	node.remove_point(index)
+	_path_gizmo.force_redraw()
+
+func _remove_closest_to(node, pos):
+	node.remove_closest_to(pos)
+	_path_gizmo.force_redraw()
 
 func _show_control_panel():
 	if not _path_controls.get_parent():
