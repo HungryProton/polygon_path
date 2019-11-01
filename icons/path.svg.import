@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/path.svg-dc820cc146646e456204f1ee42393ff3.stex"
+path="res://.import/path.svg-e8dd0ccc8773cc6c7531dacd81fe6f34.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/gm_path/icons/path.svg"
-dest_files=[ "res://.import/path.svg-dc820cc146646e456204f1ee42393ff3.stex" ]
+source_file="res://addons/polygon_path/icons/path.svg"
+dest_files=[ "res://.import/path.svg-e8dd0ccc8773cc6c7531dacd81fe6f34.stex" ]
 
 [params]
 

@@ -28,3 +28,11 @@ This addon is still a **work in progress** and is **not** considered production 
   + Third button is the Remove mode (Not working yet)
 - The Close curve button (Not working yet) closes the loop
 - The Show polygon button display the internal polygon generated fom the path. The is_inside method relies on this polygon for the calculations.
+
+
+## Licence
+
+Unless stated otherwise, the content of this project is available under the MIT
+licence. Note that some icons (namely the select, create and delete curve point)
+comes from the GodotEngine editor and are distributed under the CC-BY 4.0
+licence

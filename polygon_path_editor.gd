@@ -4,43 +4,42 @@ extends EditorPlugin
 signal mode
 signal options
 
-var _gm_path_type = preload("res://addons/gm_path/gm_path.gd")
-var _path_gizmo = load("res://addons/gm_path/gm_path_gizmo_plugin.gd").new()
-var _path_controls = preload("res://addons/gm_path/gui/gm_path_controls.tscn").instance()
+var _path_gizmo = load("res://addons/polygon_path/polygon_path_gizmo_plugin.gd").new()
+var _path_controls = preload("res://addons/polygon_path/gui/polygon_path_controls.tscn").instance()
 var _edited_node = null
 var _editor_selection : EditorSelection = null
 var _mode = "select"
 
-var common = load("res://addons/gm_path/common.gd")
+var common = load("res://addons/polygon_path/common.gd")
 
 # --
 # EditorPlugin overrides
 # --
 
 func get_name(): 
-	return "GM Path"
+	return "PolygonPath"
 
 func _enter_tree():
 	add_custom_type(
-		"GM_Path", 
+		"PolygonPath", 
 		"Spatial",
-		load("res://addons/gm_path/gm_path.gd"),
-		load("res://addons/gm_path/icons/path.svg")
+		load("res://addons/polygon_path/polygon_path.gd"),
+		load("res://addons/polygon_path/icons/path.svg")
 	)
 	_register_gizmos()
 	_register_signals()
 
 func _exit_tree():
-	remove_custom_type("GM_Path")
+	remove_custom_type("PolygonPath")
 	_deregister_gizmos()
 	_deregister_signals()
 	
 func handles(node):
-	return node is _gm_path_type
+	return node is PolygonPath
 
 func edit(node):
 	_show_control_panel()
-	_edited_node = node as GM_Path
+	_edited_node = node as PolygonPath
 
 # --
 # Internal methods
@@ -67,7 +66,7 @@ func _deregister_signals():
 func _on_selection_change():
 	_editor_selection = get_editor_interface().get_selection()
 	var selected = _editor_selection.get_selected_nodes()
-	if len(selected) == 0 or not selected[0] is GM_Path:
+	if len(selected) == 0 or not selected[0] is PolygonPath:
 		_edited_node = null
 		if _path_controls.get_parent():
 			_hide_control_panel()

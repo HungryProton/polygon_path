@@ -1,9 +1,13 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://addons/gm_path/gui/gm_path_controls.gd" type="Script" id=1]
+[ext_resource path="res://addons/polygon_path/gui/polygon_path_controls.gd" type="Script" id=1]
+[ext_resource path="res://addons/polygon_path/gui/edit_mode_group.tres" type="ButtonGroup" id=2]
+[ext_resource path="res://addons/polygon_path/icons/select.svg" type="Texture" id=3]
+[ext_resource path="res://addons/polygon_path/icons/create.svg" type="Texture" id=4]
+[ext_resource path="res://addons/polygon_path/icons/delete.svg" type="Texture" id=5]
 
 [node name="HBoxContainer" type="HBoxContainer"]
-margin_right = 320.0
+margin_right = 426.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 0, 26 )
 script = ExtResource( 1 )
@@ -14,41 +18,54 @@ margin_bottom = 26.0
 
 [node name="Select" type="Button" parent="."]
 margin_left = 8.0
-margin_right = 34.0
+margin_right = 36.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 26, 0 )
+toggle_mode = true
+pressed = true
+group = ExtResource( 2 )
+icon = ExtResource( 3 )
+flat = true
 
 [node name="Add" type="Button" parent="."]
-margin_left = 38.0
-margin_right = 64.0
+margin_left = 40.0
+margin_right = 68.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 26, 0 )
+toggle_mode = true
+group = ExtResource( 2 )
+icon = ExtResource( 4 )
+flat = true
 
 [node name="Remove" type="Button" parent="."]
-margin_left = 68.0
-margin_right = 94.0
+margin_left = 72.0
+margin_right = 100.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 26, 0 )
+toggle_mode = true
+group = ExtResource( 2 )
+icon = ExtResource( 5 )
+flat = true
 
 [node name="ClosedCurve" type="CheckBox" parent="."]
-margin_left = 98.0
-margin_right = 208.0
+margin_left = 104.0
+margin_right = 214.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 30, 0 )
 text = "Closed curve"
 flat = true
 
 [node name="ShowPolygon" type="CheckBox" parent="."]
-margin_left = 212.0
-margin_right = 327.0
+margin_left = 218.0
+margin_right = 333.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 30, 0 )
 text = "Show polygon"
 flat = true
 
 [node name="ShowGrid" type="CheckBox" parent="."]
-margin_left = 331.0
-margin_right = 420.0
+margin_left = 337.0
+margin_right = 426.0
 margin_bottom = 26.0
 rect_min_size = Vector2( 30, 0 )
 text = "Show grid"

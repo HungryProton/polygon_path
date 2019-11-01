@@ -1,7 +1,6 @@
 extends EditorSpatialGizmoPlugin
 
-var GM_Path = preload("res://addons/gm_path/gm_path.gd")
-var gizmo = preload("res://addons/gm_path/gm_path_gizmo.gd")
+var gizmo = preload("res://addons/polygon_path/polygon_path_gizmo.gd")
 var current_gizmo
 
 func show_polygon(value):
@@ -22,7 +21,7 @@ func _init():
 	create_square_handle_material("square")
 
 func create_gizmo(node):
-	if node is GM_Path:
+	if node is PolygonPath:
 		current_gizmo = gizmo.new()
 		return current_gizmo
 	else:
@@ -31,7 +30,7 @@ func create_gizmo(node):
 func create_square_handle_material(name, p_billboard=false):
 	var handle_material = SpatialMaterial.new()
 	var handle_icon = ImageTexture.new()
-	handle_icon.load("res://addons/gm_path/icons/handle.svg")
+	handle_icon.load("res://addons/polygon_path/icons/handle.svg")
 	
 	handle_material.set_flag(SpatialMaterial.FLAG_UNSHADED, true)
 	handle_material.set_flag(SpatialMaterial.FLAG_USE_POINT_SIZE, true)

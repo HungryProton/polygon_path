@@ -1,6 +1,6 @@
 extends EditorSpatialGizmo
 
-var common = load("res://addons/gm_path/common.gd")
+var common = load("res://addons/polygon_path/common.gd")
 
 var _show_polygon : bool = false
 var _show_grid : bool = false
@@ -14,38 +14,38 @@ func show_grid(value):
 	redraw()
 
 func set_handle(index, camera, point):
-	var gm_path = get_spatial_node()
-	var ray_hit_pos = common.intersect_with(gm_path, camera, point)
+	var polygon_path = get_spatial_node()
+	var ray_hit_pos = common.intersect_with(polygon_path, camera, point)
 	if not ray_hit_pos:
 		return
-	var local_pos = gm_path.to_local(ray_hit_pos)
-	var count = gm_path.curve.get_point_count()
+	var local_pos = polygon_path.to_local(ray_hit_pos)
+	var count = polygon_path.curve.get_point_count()
 	if index < count:
-		gm_path.set_point_position(index, local_pos)
+		polygon_path.set_point_position(index, local_pos)
 	else:
 		var i = (index - count)
 		var p_index = int(i / 2)
-		var base = gm_path.curve.get_point_position(p_index)
+		var base = polygon_path.curve.get_point_position(p_index)
 		if i % 2 == 0:
-			gm_path.set_point_in(p_index, local_pos - base)
+			polygon_path.set_point_in(p_index, local_pos - base)
 		else:
-			gm_path.set_point_out(p_index, local_pos - base)
+			polygon_path.set_point_out(p_index, local_pos - base)
 	redraw()
 
 func redraw():
 	clear()
-	var gm_path = get_spatial_node()
-	_draw_grid(gm_path)
-	_draw_path(gm_path.curve)
-	_draw_handles(gm_path.curve)
-	_draw_polygon(gm_path)
+	var polygon_path = get_spatial_node()
+	_draw_grid(polygon_path)
+	_draw_path(polygon_path.curve)
+	_draw_handles(polygon_path.curve)
+	_draw_polygon(polygon_path)
 
-func _draw_grid(gm_path):
+func _draw_grid(polygon_path):
 	if not _show_grid:
 		return
 	var grid = PoolVector3Array()
-	var size = gm_path.size
-	var center = gm_path.center
+	var size = polygon_path.size
+	var center = polygon_path.center
 	var resolution = 0.5
 	var steps_x = int(size.x / resolution) + 1
 	var steps_y = int(size.z / resolution) + 1
@@ -96,11 +96,11 @@ func _draw_handles(curve):
 	add_handles(square_handles, get_plugin().get_material("square", self))
 	add_lines(lines, get_plugin().get_material("handle_lines", self))
 
-func _draw_polygon(gm_path):
+func _draw_polygon(polygon_path):
 	if not _show_polygon:
 		return
 	var polygon = PoolVector3Array()
-	var polygon_points = gm_path.polygon_points
+	var polygon_points = polygon_path.polygon_points
 	var size = polygon_points.size() - 1
 
 	for i in range(size):

@@ -2,7 +2,7 @@ tool
 extends Spatial
 
 # --
-# GM Path
+# PolygonPath
 # --
 # Alternative to the built in Path node with the following features:
 # + New gizmo for easier handling
@@ -15,7 +15,7 @@ extends Spatial
 #
 # --
 
-class_name GM_Path
+class_name PolygonPath
 
 signal curve_updated
 
@@ -152,6 +152,8 @@ func _update_from_curve():
 	_on_curve_update()
 	emit_signal("curve_updated")
 
+# Curve update post hook. Children may inherit this function or listen to the
+# curve_updated signal instead.
 func _on_curve_update():
 	pass
 

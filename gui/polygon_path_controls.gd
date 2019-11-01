@@ -4,6 +4,7 @@ extends HBoxContainer
 signal mode
 signal options
 
+
 func _on_select():
 	emit_signal("mode", "select")
 
