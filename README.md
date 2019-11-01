@@ -25,10 +25,10 @@ This addon is still a **work in progress** and is **not** considered production 
 - 3 modes are available
   + First button is the Select mode, allows you to move the handles
   + Second button is the Add mode, clicking on the plane will add a new point at the end of the path
-  + Third button is the Remove mode (Not working yet)
+  + Third button is the Remove mode
 - The Close curve button (Not working yet) closes the loop
 - The Show polygon button display the internal polygon generated fom the path. The is_inside method relies on this polygon for the calculations.
-
+- The Show Grid button display the plane where the path is constrained to.
 
 ## Licence
 
