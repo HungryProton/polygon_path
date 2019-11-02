@@ -140,8 +140,9 @@ func _polygon_resolution_set(value):
 		# and freeze the editor for several seconds at least
 		return
 	polygon_resolution = value
-	curve.set_bake_interval(clamp(value, 0.09, 0.2))
-	_update_from_curve()
+	if curve:
+		curve.set_bake_interval(clamp(value, 0.09, 0.2))
+		_update_from_curve()
 
 # Travel the whole path to update the polygon and bounds
 func _update_from_curve():
