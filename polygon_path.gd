@@ -135,12 +135,12 @@ func _get_projected_coords(coords : Vector3):
 	return Vector2(coords.x, coords.z)
 
 func _polygon_resolution_set(value):
-	if (value <= 0.1):
+	if (value < 0.09):
 		# Ignore values too small or it will generate too much geometry
 		# and freeze the editor for several seconds at least
 		return
 	polygon_resolution = value
-	print('calling update')
+	curve.set_bake_interval(clamp(value, 0.09, 0.2))
 	_update_from_curve()
 
 # Travel the whole path to update the polygon and bounds
@@ -199,4 +199,3 @@ func _update_from_curve():
 # curve_updated signal instead.
 func _on_curve_update():
 	pass
-
