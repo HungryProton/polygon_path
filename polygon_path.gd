@@ -51,6 +51,7 @@ func is_point_inside(point : Vector3):
 func add_point(position):
 	if not curve:
 		curve = Curve3D.new()
+	
 	curve.add_point(position)
 	var current_index = curve.get_point_count() - 1
 	var previous_index = current_index - 1
@@ -72,6 +73,7 @@ func remove_point(index):
 	if index > curve.get_point_count() - 1:
 		return
 	curve.remove_point(index)
+	_update_from_curve()
  
 func set_closed_curve(value):
 	closed_curve = value

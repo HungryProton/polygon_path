@@ -134,6 +134,7 @@ func _set_point(node, index, pos, vec_in, vec_out):
 	node.curve.set_point_position(index, pos)
 	node.curve.set_point_in(index, vec_in)
 	node.curve.set_point_out(index, vec_out)
+	node._update_from_curve()
 	_path_gizmo.force_redraw()
 
 func _add_point(node, pos):
@@ -142,6 +143,7 @@ func _add_point(node, pos):
 
 func _add_point_at(node, index, pos, vec_in, vec_out):
 	node.curve.add_point(pos, vec_in, vec_out, index)
+	node._update_from_curve()
 	_path_gizmo.force_redraw()
 
 func _remove_point(node, index):
