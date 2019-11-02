@@ -1,9 +1,10 @@
 extends EditorSpatialGizmo
 
 var common = load("res://addons/polygon_path/common.gd")
-
+	
 var _show_polygon : bool = false
 var _show_grid : bool = false
+var _drag_info : PolygonPathDragInfo = PolygonPathDragInfo.new()
 
 func show_polygon(value):
 	_show_polygon = value
@@ -13,7 +14,21 @@ func show_grid(value):
 	_show_grid = value
 	redraw()
 
+func consume_drag_info():
+	var drag = PolygonPathDragInfo.new()
+	PolygonPathDragInfo.assign(drag, _drag_info)
+	_drag_info.reset()
+	
+	var curve = get_spatial_node().curve
+	drag.new_pos = curve.get_point_position(drag.index)
+	drag.new_in = curve.get_point_in(drag.index)
+	drag.new_out = curve.get_point_out(drag.index)
+	
+	return drag
+
 func set_handle(index, camera, point):
+	if _drag_info.index == -1:
+		_save_handle_info(index)
 	var polygon_path = get_spatial_node()
 	var ray_hit_pos = common.intersect_with(polygon_path, camera, point)
 	if not ray_hit_pos:
@@ -117,3 +132,16 @@ func _draw_polygon(polygon_path):
 		polygon.append(Vector3(b.x, 0.0, b.y))
 	
 	add_lines(polygon, get_plugin().get_material("polygon", self), false)
+
+func _save_handle_info(index):
+	var curve = get_spatial_node().curve
+	var p_index = index
+	var count = curve.get_point_count()
+	if index >= count:
+		var i = (index - count)
+		p_index = int(i / 2)
+
+	_drag_info.old_pos = curve.get_point_position(p_index)
+	_drag_info.old_in = curve.get_point_in(p_index)
+	_drag_info.old_out = curve.get_point_out(p_index)
+	_drag_info.index = p_index

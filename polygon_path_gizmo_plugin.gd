@@ -15,6 +15,12 @@ func force_redraw():
 	if current_gizmo:
 		current_gizmo.redraw()
 
+func consume_drag_info():
+	if current_gizmo:
+		return current_gizmo.consume_drag_info()
+	else:
+		return null
+
 func _init():
 	create_material("polygon", Color(1, 0, 0), false, true)
 	create_material("path", Color(0, 0, 1), false, true)
