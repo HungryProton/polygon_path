@@ -6,7 +6,7 @@ signal options
 
 var _path_gizmo = load("res://addons/polygon_path/polygon_path_gizmo_plugin.gd").new()
 var _path_controls = preload("res://addons/polygon_path/gui/polygon_path_controls.tscn").instance()
-var _edited_node = null
+var _edited_node : PolygonPath = null
 var _editor_selection : EditorSelection = null
 var _mode = "select"
 
@@ -16,12 +16,12 @@ var common = load("res://addons/polygon_path/common.gd")
 # EditorPlugin overrides
 # --
 
-func get_name(): 
+func get_name():
 	return "PolygonPath"
 
 func _enter_tree():
 	add_custom_type(
-		"PolygonPath", 
+		"PolygonPath",
 		"Spatial",
 		load("res://addons/polygon_path/polygon_path.gd"),
 		load("res://addons/polygon_path/icons/path.svg")
@@ -33,13 +33,15 @@ func _exit_tree():
 	remove_custom_type("PolygonPath")
 	_deregister_gizmos()
 	_deregister_signals()
-	
+
 func handles(node):
 	return node is PolygonPath
 
 func edit(node):
 	_show_control_panel()
 	_edited_node = node as PolygonPath
+	if not _edited_node.is_connected("curve_updated", _path_gizmo, "force_redraw"):
+		_edited_node.connect("curve_updated", _path_gizmo, "force_redraw")
 
 # --
 # Internal methods
@@ -55,7 +57,7 @@ func _deregister_gizmos():
 	_hide_control_panel()
 	disconnect("mode", self, "_on_mode_change")
 	disconnect("options", self, "_on_option_change")
-	
+
 func _register_signals():
 	_editor_selection = get_editor_interface().get_selection()
 	_editor_selection.connect("selection_changed", self, "_on_selection_change")
@@ -97,8 +99,9 @@ func forward_spatial_gui_input(camera, event):
 		var ray_hit_pos = common.intersect_with(_edited_node, camera, event.position)
 		if not ray_hit_pos:
 			return false
-		
+
 		captured_event = true
+		_edited_node.ensure_curve_is_valid()
 		var pos = _edited_node.to_local(ray_hit_pos)
 		var undo = get_undo_redo()
 		if _mode == "add" and not event.pressed:
@@ -127,7 +130,7 @@ func forward_spatial_gui_input(camera, event):
 			undo.add_undo_method(self, "_set_point", _edited_node, d.index, d.old_pos, d.old_in, d.old_out)
 			undo.add_do_method(self, "_set_point", _edited_node, d.index, d.new_pos, d.new_in, d.new_out)
 			undo.commit_action()
-			
+
 	return captured_event
 
 func _set_point(node, index, pos, vec_in, vec_out):
