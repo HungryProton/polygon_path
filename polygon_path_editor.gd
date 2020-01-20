@@ -16,12 +16,12 @@ var common = load("res://addons/polygon_path/common.gd")
 # EditorPlugin overrides
 # --
 
-func get_name(): 
+func get_name():
 	return "PolygonPath"
 
 func _enter_tree():
 	add_custom_type(
-		"PolygonPath", 
+		"PolygonPath",
 		"Spatial",
 		load("res://addons/polygon_path/polygon_path.gd"),
 		load("res://addons/polygon_path/icons/path.svg")
@@ -33,13 +33,13 @@ func _exit_tree():
 	remove_custom_type("PolygonPath")
 	_deregister_gizmos()
 	_deregister_signals()
-	
+
 func handles(node):
 	return node is PolygonPath
 
 func edit(node):
 	_show_control_panel()
-	_edited_node = node as PolygonPath
+	_edited_node = node#as PolygonPath
 
 # --
 # Internal methods
@@ -55,7 +55,7 @@ func _deregister_gizmos():
 	_hide_control_panel()
 	disconnect("mode", self, "_on_mode_change")
 	disconnect("options", self, "_on_option_change")
-	
+
 func _register_signals():
 	_editor_selection = get_editor_interface().get_selection()
 	_editor_selection.connect("selection_changed", self, "_on_selection_change")
@@ -85,19 +85,16 @@ func _on_option_change(option, value):
 			_path_gizmo.show_grid(value)
 
 func forward_spatial_gui_input(camera, event):
-	var captured_event = false
-
 	if not _edited_node:
 		return false
 
-	#if _mode == "select":
-	#	return false
+	var captured_event = false
 
 	if (event is InputEventMouseButton) and (event.button_index == BUTTON_LEFT):
 		var ray_hit_pos = common.intersect_with(_edited_node, camera, event.position)
 		if not ray_hit_pos:
 			return false
-		
+
 		captured_event = true
 		var pos = _edited_node.to_local(ray_hit_pos)
 		var undo = get_undo_redo()
@@ -118,16 +115,18 @@ func forward_spatial_gui_input(camera, event):
 			undo.add_undo_method(self, "_add_point_at", _edited_node, index, previous_pos, vec_in, vec_out)
 			undo.add_do_method(self, "_remove_closest_to", _edited_node, pos)
 			undo.commit_action()
-		if _mode == "select":
+		if _mode == "select": # TODO : Find the proper way to handle draging handles
 			captured_event = false
 			if event.pressed:
 				return captured_event
 			var d = _path_gizmo.consume_drag_info()
+			if not d:
+				return false
 			undo.create_action("Move point from PolygonPath")
 			undo.add_undo_method(self, "_set_point", _edited_node, d.index, d.old_pos, d.old_in, d.old_out)
 			undo.add_do_method(self, "_set_point", _edited_node, d.index, d.new_pos, d.new_in, d.new_out)
 			undo.commit_action()
-			
+
 	return captured_event
 
 func _set_point(node, index, pos, vec_in, vec_out):

@@ -19,16 +19,17 @@ class_name PolygonPath
 
 signal curve_updated
 
-## -- 
+## --
 ## Exported variables
 ## --
+
+export(Curve3D) var curve : Curve3D = Curve3D.new()
 export(float) var polygon_resolution : float = 1 setget _polygon_resolution_set
 
-## -- 
+## --
 ## Public variables
 ## --
 
-export var curve : Curve3D
 var polygon : PolygonPathFinder
 var polygon_points : PoolVector2Array
 var size : Vector3
@@ -51,7 +52,7 @@ func is_point_inside(point : Vector3):
 func add_point(position):
 	if not curve:
 		curve = Curve3D.new()
-	
+
 	curve.add_point(position)
 	var current_index = curve.get_point_count() - 1
 	var previous_index = current_index - 1
@@ -59,14 +60,14 @@ func add_point(position):
 		curve.set_point_in(current_index, Vector3(-1.0, 0.0, 0.0))
 		curve.set_point_out(current_index, Vector3(1.0, 0.0, 0.0))
 		return
-	
+
 	var dir = position - curve.get_point_position(previous_index)
 	var dir_out = dir.normalized()
 	var dir_in = -dir.normalized()
-	
+
 	curve.set_point_in(current_index, dir_in)
 	curve.set_point_out(current_index, dir_out)
-	
+
 	_update_from_curve()
 
 func remove_point(index):
@@ -74,7 +75,7 @@ func remove_point(index):
 		return
 	curve.remove_point(index)
 	_update_from_curve()
- 
+
 func set_closed_curve(value):
 	closed_curve = value
 	if closed_curve:
@@ -97,23 +98,23 @@ func set_point_out(index, pos):
 func get_closest_to(pos):
 	var closest = -1
 	var dist_squared = -1
-	
+
 	for i in range(0, curve.get_point_count()):
 		var point_pos = curve.get_point_position(i)
 		var point_dist = point_pos.distance_squared_to(pos)
-		
+
 		if (closest == -1) or (dist_squared > point_dist):
 			closest = i
 			dist_squared = point_dist
-	
+
 	var threshold = 16 # Ignore if the closest point is farther than this
 	if dist_squared >= threshold:
 		return -1
-	
+
 	return closest
 
 func remove_closest_to(pos):
-	# Ignore if there's no point in the curve 
+	# Ignore if there's no point in the curve
 	if curve.get_point_count() == 0:
 		return
 	var closest = get_closest_to(pos)
@@ -150,13 +151,13 @@ func _update_from_curve():
 	var _max = null
 	var connections = PoolIntArray()
 	polygon_points = PoolVector2Array()
-	
+
 	if not curve:
 		curve = Curve3D.new()
-	
+
 	var length = curve.get_baked_length()
 	var steps = round(length / polygon_resolution)
-	
+
 	if steps == 0:
 		return
 
@@ -164,7 +165,7 @@ func _update_from_curve():
 		# Get a point on the curve
 		var coords_3d = curve.interpolate_baked((i/(steps-2)) * length)
 		var coords = _get_projected_coords(coords_3d)
-		
+
 		# Store polygon data
 		polygon_points.append(coords)
 		connections.append(i)
@@ -172,7 +173,7 @@ func _update_from_curve():
 			connections.append(0)
 		else:
 			connections.append(i + 1)
-		
+
 		# Check for bounds
 		if i == 0:
 			_min = coords
@@ -186,13 +187,13 @@ func _update_from_curve():
 				_max.y = coords.y
 			if coords.y < _min.y:
 				_min.y = coords.y
-	
+
 	if not polygon:
 		polygon = PolygonPathFinder.new()
 	polygon.setup(polygon_points, connections)
 	size = Vector3(_max.x - _min.x, 0.0, _max.y - _min.y)
 	center = Vector3((_min.x + _max.x) / 2, 0.0, (_min.y + _max.y) / 2)
-	
+
 	_on_curve_update()
 	emit_signal("curve_updated")
 

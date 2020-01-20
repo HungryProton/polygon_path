@@ -1,7 +1,9 @@
 extends EditorSpatialGizmo
 
+class_name PolygonPathSpatialGizmo
+
 var common = load("res://addons/polygon_path/common.gd")
-	
+
 var _show_polygon : bool = false
 var _show_grid : bool = false
 var _drag_info : PolygonPathDragInfo = PolygonPathDragInfo.new()
@@ -18,12 +20,12 @@ func consume_drag_info():
 	var drag = PolygonPathDragInfo.new()
 	PolygonPathDragInfo.assign(drag, _drag_info)
 	_drag_info.reset()
-	
+
 	var curve = get_spatial_node().curve
 	drag.new_pos = curve.get_point_position(drag.index)
 	drag.new_in = curve.get_point_in(drag.index)
 	drag.new_out = curve.get_point_out(drag.index)
-	
+
 	return drag
 
 func set_handle(index, camera, point):
@@ -55,6 +57,8 @@ func set_handle(index, camera, point):
 func redraw():
 	clear()
 	var polygon_path = get_spatial_node()
+	if not polygon_path.curve:
+		return
 	_draw_grid(polygon_path)
 	_draw_path(polygon_path.curve)
 	_draw_handles(polygon_path.curve)
@@ -70,25 +74,25 @@ func _draw_grid(polygon_path):
 	var steps_x = int(size.x / resolution) + 1
 	var steps_y = int(size.z / resolution) + 1
 	var half_size = size/2
-	
+
 	for i in range(steps_x):
 		grid.append(Vector3(i*resolution, 0.0, 0.0) - half_size + center)
 		grid.append(Vector3(i*resolution, 0.0, size.z) - half_size + center)
 	for j in range(steps_y):
 		grid.append(Vector3(0.0, 0.0, j*resolution) - half_size + center)
 		grid.append(Vector3(size.x, 0.0, j*resolution) - half_size + center)
-		
+
 	add_lines(grid, get_plugin().get_material("grid", self), false)
 
 func _draw_path(curve):
 	var path = PoolVector3Array()
 	var points = curve.get_baked_points()
 	var size = points.size() - 1
-	
+
 	for i in range(size ):
 		path.append(points[i])
 		path.append(points[i + 1])
-	
+
 	add_lines(path, get_plugin().get_material("path", self), false)
 
 func _draw_handles(curve):
