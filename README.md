@@ -11,7 +11,10 @@ A curve node constrained on a 3D plane with the following features :
 
 ##  Disclaimer
 
-This addon is still a **work in progress** and is **not** considered production ready
+This addon is still a **work in progress** and is **not** considered production ready.
+
+There is a lot of thing about how the gizmos is handled that is **plain wrong** and this should not be used as an example at all. 
+If you're looking for a way to write 3d gizmos, look at this source file instead : https://github.com/HungryProton/concept_graph/blob/master/src/editor/gizmos/box_gizmo_plugin.gd
 
 ## Installation
 
